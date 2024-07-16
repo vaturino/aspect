@@ -32,6 +32,7 @@ namespace aspect
       InitialComposition<dim>::initialize_one_particle_property(const Point<dim> &position,
                                                                 std::vector<double> &data) const
       {
+        // std::cout << "initializing" << std::endl;
         for (unsigned int i = 0; i < this->n_compositional_fields(); ++i)
           data.push_back(this->get_initial_composition_manager().initial_composition(position,i));
       }
@@ -51,6 +52,7 @@ namespace aspect
       std::vector<std::pair<std::string, unsigned int>>
       InitialComposition<dim>::get_property_information() const
       {
+        // std::cout << "getting property information 3" << std::endl;
         AssertThrow(this->n_compositional_fields() > 0,
                     ExcMessage("You have requested the particle property <initial "
                                "composition>, but the number of compositional fields is 0. "
@@ -58,7 +60,6 @@ namespace aspect
                                "this particle property."));
 
         std::vector<std::pair<std::string,unsigned int>> property_information;
-
         for (unsigned int i = 0; i < this->n_compositional_fields(); ++i)
           {
             std::ostringstream field_name;

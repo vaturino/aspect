@@ -21,6 +21,8 @@
 
 #include <aspect/particle/property/composition.h>
 #include <aspect/initial_composition/interface.h>
+#include <aspect/material_model/visco_plastic.h>
+#include <aspect/material_model/simple.h>
 
 namespace aspect
 {
@@ -40,16 +42,27 @@ namespace aspect
       template <int dim>
       void
       Composition<dim>::update_particle_property(const unsigned int data_position,
-                                                 const Vector<double> &solution,
-                                                 const std::vector<Tensor<1,dim>> &/*gradients*/,
-                                                 typename ParticleHandler<dim>::particle_iterator &particle) const
-      {
+                                                const Vector<double> &solution,
+                                                const std::vector<Tensor<1,dim>> &/*gradients*/,
+                                                typename ParticleHandler<dim>::particle_iterator &particle) const
+      { 
+        // std::cout << "compo data position: " << data_position << std::endl;
+        double tmp = 0.0;
         for (unsigned int i = 0; i < this->n_compositional_fields(); ++i)
           {
             const unsigned int solution_component = this->introspection().component_indices.compositional_fields[i];
-            particle->get_properties()[data_position+i] = solution[solution_component];
+
+            if ((i == 0) && (solution[this->introspection().component_indices.temperature] < 0.9))
+              {
+                // tmp = solution[solution_component];
+                particle->get_properties()[data_position+i] = 0.0;
+              } /*lse if ((i == 1) && (solution[this->introspection().component_indices.temperature] < 0.9))
+              {
+                particle->get_properties()[data_position+i] = tmp;
+              }*/
           }
-      }
+          
+    }
 
       template <int dim>
       UpdateTimeFlags
@@ -69,7 +82,7 @@ namespace aspect
       std::vector<std::pair<std::string, unsigned int>>
       Composition<dim>::get_property_information() const
       {
-
+        std::cout << "getting property information" << std::endl;
         AssertThrow(this->n_compositional_fields() > 0,
                     ExcMessage("You have requested the particle property <composition>, "
                                "but the number of compositional fields is 0. "
