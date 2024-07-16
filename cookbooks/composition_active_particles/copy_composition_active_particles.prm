@@ -19,6 +19,8 @@ subsection Geometry model
   subsection Box
     set X extent = 2
     set Y extent = 1
+    set Y repetitions = 1
+    set X repetitions = 2
   end
 end
 

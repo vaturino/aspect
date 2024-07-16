@@ -54,12 +54,15 @@ namespace aspect
 
             if ((i == 0) && (solution[this->introspection().component_indices.temperature] < 0.9))
               {
-                // tmp = solution[solution_component];
+                tmp = solution[solution_component];
                 particle->get_properties()[data_position+i] = 0.0;
-              } /*lse if ((i == 1) && (solution[this->introspection().component_indices.temperature] < 0.9))
+              }
+            else if ((i == 1) && (solution[this->introspection().component_indices.temperature] < 0.9))
               {
-                particle->get_properties()[data_position+i] = tmp;
-              }*/
+                particle->get_properties()[data_position+i] += tmp;
+                if (particle->get_properties()[data_position+i] > 1.0)
+                  particle->get_properties()[data_position+i] = 1.0;
+              }
           }
           
     }
